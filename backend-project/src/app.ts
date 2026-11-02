@@ -1,28 +1,23 @@
+import express from "express";
 import cors from "cors";
-import express, { type NextFunction, type Request, type Response } from "express";
+import routes from "./routes";
+import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
 
 const app = express();
 
-app.use(cors());
+app.disable("x-powered-by");
+
+// Only our own frontend may call the API from a browser
+const allowedOrigins: string[] = [];
+if (process.env.FRONTEND_URL) allowedOrigins.push(process.env.FRONTEND_URL.replace(/\/$/, ""));
+if (process.env.NODE_ENV !== "production") allowedOrigins.push("http://localhost:5173");
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: "1mb" }));
 
-app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
-});
+app.use("/api", routes);
 
-app.use((_req, res) => {
-  res.status(404).json({
-    message: "The requested resource was not found",
-    code: "NOT_FOUND",
-  });
-});
-
-app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  console.error("Unhandled request error:", error);
-  res.status(500).json({
-    message: "Something went wrong",
-    code: "SERVER_ERROR",
-  });
-});
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;

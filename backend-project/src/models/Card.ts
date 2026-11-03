@@ -1,25 +1,29 @@
 import { Schema, model, Document, Types } from "mongoose";
+import { isValidDateString } from "../utils/dates";
+export { isValidDateString };
 
-// 1. Create a TypeScript interface
+export type CardSource = "manual" | "ai";
+
 export interface ICard extends Document {
   board: Types.ObjectId;
   list: Types.ObjectId;
   workspace: Types.ObjectId;
   title: string;
-  description?: string;
-  dueDate?: string | null;
-  assignee?: Types.ObjectId | null;
+  description: string;
+  dueDate: string | null;
+  assignee: Types.ObjectId | null;
   position: number;
   createdBy: Types.ObjectId;
-  createdVia: "manual" | "ai";
-  aiBatchId?: string | null;
+  createdVia: CardSource;
+  aiBatchId: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-// 2. Create the Mongoose Schema
 const cardSchema = new Schema<ICard>(
   {
+    // workspace, board and list are always set by the SERVICE from the parent
+    // document. They are never taken from the request body.
     board: {
       type: Schema.Types.ObjectId,
       ref: "Board",
@@ -45,23 +49,20 @@ const cardSchema = new Schema<ICard>(
     description: {
       type: String,
       default: "",
+      trim: true,
       maxlength: [5000, "Description must be at most 5000 characters"],
     },
+    // A calendar day, not a moment in time, so it is stored as text (see schema.md section 12)
     dueDate: {
-      type: String, // Stored as YYYY-MM-DD string per your API contract
+      type: String,
       default: null,
       validate: {
-        validator: function (v: string) {
-          if (!v) return true; // Allow null/empty
-          // Regex for YYYY-MM-DD and check if it's a real date
-          const regex = /^\d{4}-\d{2}-\d{2}$/;
-          if (!regex.test(v)) return false;
-          const date = new Date(v);
-          return date instanceof Date && !isNaN(date.getTime());
-        },
-        message: "Due date must be a valid date in YYYY-MM-DD format",
+        validator: (value: string | null) => value === null || isValidDateString(value),
+        message: "Due date must be a real date in YYYY-MM-DD format",
       },
     },
+    // The service checks that this person is a member of the card's workspace.
+    // The database cannot enforce that.
     assignee: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -70,7 +71,7 @@ const cardSchema = new Schema<ICard>(
     position: {
       type: Number,
       required: [true, "Position is required"],
-      default: 1024, // Default starting position
+      default: 1024,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
@@ -81,7 +82,6 @@ const cardSchema = new Schema<ICard>(
       type: String,
       enum: ["manual", "ai"],
       default: "manual",
-      required: true,
     },
     aiBatchId: {
       type: String,
@@ -91,22 +91,25 @@ const cardSchema = new Schema<ICard>(
   { timestamps: true }
 );
 
-// 3. Add Database Indexes for Performance
-// Since you will frequently query cards by board, list, and workspace
-cardSchema.index({ board: 1, list: 1, position: 1 });
-cardSchema.index({ workspace: 1, assignee: 1 }); // For "My Cards" page
-cardSchema.index({ aiBatchId: 1 }, { sparse: true }); // For AI batch checks
+// A column in order
+cardSchema.index({ list: 1, position: 1 });
+// Loading a whole board
+cardSchema.index({ board: 1 });
+// "My cards", sorted by due date
+cardSchema.index({ assignee: 1, dueDate: 1 });
+// Overdue and due-today checks on a board
+cardSchema.index({ board: 1, dueDate: 1 });
+// Admin statistics: cards created this week
+cardSchema.index({ createdAt: -1 });
+// "Was this AI batch already added to this board?" (BATCH_ALREADY_ADDED)
+cardSchema.index({ board: 1, aiBatchId: 1 }, { sparse: true });
 
-// 4. Output formatting (id instead of _id)
 cardSchema.set("toJSON", {
-  virtuals: true,
   versionKey: false,
-  transform: (_doc, ret: Record<string, any>) => {
-    ret.id = String(ret._id);
-    delete ret._id;
-    return ret;
+  transform: (_doc, ret) => {
+    const { _id, ...rest } = ret as unknown as Record<string, unknown> & { _id: unknown };
+    return { id: String(_id), ...rest };
   },
 });
 
-// 5. Export the model
 export const Card = model<ICard>("Card", cardSchema);

@@ -94,14 +94,17 @@ userSchema.methods.comparePassword = async function (candidate: string): Promise
 
 // What leaves the server: "id" instead of "_id", and nothing secret
 userSchema.set("toJSON", {
-  transform: (_doc, ret: any) => {
-    ret.id = String(ret._id);
-    delete ret._id;
-    delete ret.__v;
-    delete ret.password;
-    delete ret.resetPasswordToken;
-    delete ret.resetPasswordExpires;
-    return ret;
+  versionKey: false,
+  transform: (_doc, ret) => {
+    const {
+      _id,
+      password: _password,
+      resetPasswordToken: _resetPasswordToken,
+      resetPasswordExpires: _resetPasswordExpires,
+      ...rest
+    } = ret as unknown as Record<string, unknown> & { _id: unknown };
+
+    return { id: String(_id), ...rest };
   },
 });
 

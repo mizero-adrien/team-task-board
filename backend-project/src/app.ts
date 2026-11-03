@@ -1,5 +1,10 @@
 import cors from "cors";
-import express, { type NextFunction, type Request, type Response } from "express";
+import express from "express";
+import { errorHandler, notFound } from "./middleware/error";
+import inviteActionRoutes from "./routes/inviteAction.routes";
+import inviteRoutes from "./routes/invite.routes";
+import workspaceMemberRoutes from "./routes/workspaceMember.routes";
+import workspaceRoutes from "./routes/workspace.routes";
 
 const app = express();
 
@@ -10,19 +15,12 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-app.use((_req, res) => {
-  res.status(404).json({
-    message: "The requested resource was not found",
-    code: "NOT_FOUND",
-  });
-});
+app.use("/api/workspaces", workspaceRoutes);
+app.use("/api/workspaces/:workspaceId/members", workspaceMemberRoutes);
+app.use("/api/workspaces/:workspaceId/invites", inviteRoutes);
+app.use("/api/invites", inviteActionRoutes);
 
-app.use((error: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  console.error("Unhandled request error:", error);
-  res.status(500).json({
-    message: "Something went wrong",
-    code: "SERVER_ERROR",
-  });
-});
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;

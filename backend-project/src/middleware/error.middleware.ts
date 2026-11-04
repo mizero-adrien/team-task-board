@@ -1,4 +1,5 @@
 import type { ErrorRequestHandler, RequestHandler } from "express";
+import { ApiError } from "../utils/ApiError";
 import { HttpError } from "../utils/HttpError";
 
 // Anything that matched no route
@@ -11,6 +12,15 @@ export const notFoundHandler: RequestHandler = (_req, _res, next) => {
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof HttpError) {
     res.status(err.status).json({ message: err.message, code: err.code, ...err.details });
+    return;
+  }
+
+  if (err instanceof ApiError) {
+    res.status(err.statusCode).json({
+      message: err.message,
+      code: err.code,
+      ...(err.details ? { details: err.details } : {}),
+    });
     return;
   }
 

@@ -1,7 +1,7 @@
 import type { RequestHandler } from "express";
 import { User } from "../models/User";
 import { HttpError } from "../utils/HttpError";
-import { asyncHandler } from "../utils/AsyncHandler";
+import { asyncHandler } from "../utils/asyncHandler";
 import { isInvalidTokenError, verifyToken, type TokenPayload } from "../utils/token";
 
 // Signed in? Runs before every protected route.

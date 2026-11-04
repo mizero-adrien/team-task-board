@@ -21,7 +21,6 @@ app.use(express.json({ limit: "1mb" }));
 
 app.use("/api", routes);
 
-<<<<<<< HEAD
 app.use("/api/workspaces", workspaceRoutes);
 app.use("/api/workspaces/:workspaceId/members", workspaceMemberRoutes);
 app.use("/api/workspaces/:workspaceId/invites", inviteRoutes);

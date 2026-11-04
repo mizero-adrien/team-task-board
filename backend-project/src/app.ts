@@ -1,7 +1,11 @@
 import express from "express";
 import cors from "cors";
-import routes from "./routes";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
+import inviteActionRoutes from "./routes/inviteAction.routes";
+import inviteRoutes from "./routes/invite.routes";
+import workspaceMemberRoutes from "./routes/workspaceMember.routes";
+import workspaceRoutes from "./routes/workspace.routes";
+import routes from "./routes";
 
 const app = express();
 
@@ -16,6 +20,11 @@ app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: "1mb" }));
 
 app.use("/api", routes);
+
+app.use("/api/workspaces", workspaceRoutes);
+app.use("/api/workspaces/:workspaceId/members", workspaceMemberRoutes);
+app.use("/api/workspaces/:workspaceId/invites", inviteRoutes);
+app.use("/api/invites", inviteActionRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -1,13 +1,11 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 
-type AsyncRequestHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => Promise<unknown>;
+type AsyncRoute = (req: Request, res: Response, next: NextFunction) => Promise<unknown>;
 
-export function asyncHandler(handler: AsyncRequestHandler): RequestHandler {
-  return (req, res, next) => {
-    Promise.resolve(handler(req, res, next)).catch(next);
+// Sends any error thrown inside an async route to the error handler,
+// so routes never need their own try/catch just to forward errors.
+export const asyncHandler =
+  (fn: AsyncRoute): RequestHandler =>
+  (req, res, next) => {
+    fn(req, res, next).catch(next);
   };
-}

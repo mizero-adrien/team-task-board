@@ -1,4 +1,4 @@
-import { asyncHandler } from "../utils/AsyncHandler";
+import { asyncHandler } from "../utils/asyncHandler";
 import { loginUser, registerUser } from "../services/auth.service";
 import type { LoginInput, RegisterInput } from "../schemas/auth.schema";
 

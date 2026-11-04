@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
+import { openapi } from "./docs/swagger";
 import routes from "./routes";
 
 const app = express();
@@ -16,6 +18,18 @@ app.use(cors({ origin: allowedOrigins }));
 app.use(express.json({ limit: "1mb" }));
 
 app.use("/api", routes);
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openapi, {
+    customSiteTitle: "TeamBoard API Docs",
+    swaggerOptions: { persistAuthorization: true },
+  })
+);
+app.get("/openapi.json", (_req, res) => {
+  res.json(openapi);
+});
 
 app.use(notFoundHandler);
 app.use(errorHandler);

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import aiRoutes from "./ai.routes";
 import authRoutes from "./auth.routes";
 import cardRoutes from "./card.routes";
 import inviteActionRoutes from "./inviteAction.routes";
@@ -14,6 +15,7 @@ router.get("/health", (_req, res) => {
 
 router.use("/auth", authRoutes);
 router.use(cardRoutes);
+router.use(aiRoutes);
 router.use("/workspaces/:workspaceId/members", workspaceMemberRoutes);
 router.use("/workspaces/:workspaceId/invites", inviteRoutes);
 router.use("/workspaces", workspaceRoutes);

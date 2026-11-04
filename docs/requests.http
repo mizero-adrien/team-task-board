@@ -1,0 +1,14 @@
+@base = http://localhost:1000/api
+@token = PASTE_YOUR_TOKEN_HERE
+@boardId = PASTE_A_BOARD_ID_HERE
+
+### AI usage today
+GET {{base}}/ai/usage
+Authorization: Bearer {{token}}
+
+### Break down a goal
+POST {{base}}/boards/{{boardId}}/ai/breakdown
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "goal": "Launch the school website", "deadline": "2026-12-15" }

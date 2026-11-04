@@ -8,8 +8,13 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "check:db": "tsx src/scripts/checkConnection.ts"
-  },
+    "test": "tsx --test tests/*.test.ts",
+    "typecheck:test": "tsc -p tests/tsconfig.json",
+    "check:db": "tsx src/scripts/checkConnection.ts",
+
+  "create-admin": "tsx src/scripts/createAdmin.ts"
+},
+
   "keywords": [],
   "author": "",
   "license": "ISC",

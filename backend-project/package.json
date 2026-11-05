@@ -11,8 +11,9 @@
     "test": "tsx --test tests/*.test.ts",
     "typecheck:test": "tsc -p tests/tsconfig.json",
     "check:db": "tsx src/scripts/checkConnection.ts",
-
-  "create-admin": "tsx src/scripts/createAdmin.ts"
+    "migrate:boards": "tsx src/scripts/migrateBoards.ts",
+    "migrate:boards:apply": "tsx src/scripts/migrateBoards.ts --apply",
+    "create-admin": "tsx src/scripts/createAdmin.ts"
 },
 
   "keywords": [],

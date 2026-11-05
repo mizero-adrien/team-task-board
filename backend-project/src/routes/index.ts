@@ -23,7 +23,6 @@ router.use(aiRoutes);
 router.use("/workspaces/:workspaceId/members", workspaceMemberRoutes);
 router.use("/workspaces/:workspaceId/invites", inviteRoutes);
 router.use("/workspaces", workspaceRoutes);
-router.use(listRoutes);
 router.use("/invites", inviteActionRoutes);
 
 export default router;

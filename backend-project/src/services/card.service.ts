@@ -94,7 +94,7 @@ async function loadListAndBoardForMember(listId: string, userId: string) {
     throw new HttpError(404, "NOT_FOUND", "List not found");
   }
 
-  await assertMember(board.workspaceId, userId, "List not found");
+  await assertMember(board.workspace, userId, "List not found");
 
   return { list, board };
 }
@@ -168,7 +168,7 @@ export async function createCard(
   }
 
   const assignee = input.assigneeId
-    ? await resolveAssignee(board.workspaceId, input.assigneeId)
+    ? await resolveAssignee(board.workspace, input.assigneeId)
     : null;
 
   const lastCard = await Card.findOne({ list: list._id })
@@ -181,7 +181,7 @@ export async function createCard(
   const card = await Card.create({
     board: board._id,
     list: list._id,
-    workspace: board.workspaceId,
+    workspace: board.workspace,
     title: input.title,
     description: input.description ?? "",
     dueDate: input.dueDate ?? null,
@@ -347,7 +347,7 @@ export async function bulkCreateCards(
     throw new HttpError(404, "NOT_FOUND", "Board not found");
   }
 
-  await assertMember(board.workspaceId, actor.id, "Board not found");
+  await assertMember(board.workspace, actor.id, "Board not found");
 
   const alreadyAdded = await Card.exists({ board: board._id, aiBatchId: input.batchId });
 
@@ -419,7 +419,7 @@ export async function bulkCreateCards(
     return new Card({
       board: board._id,
       list: list?._id,
-      workspace: board.workspaceId,
+      workspace: board.workspace,
       title: item.title,
       description: item.description ?? "",
       dueDate: item.dueDate ?? null,

@@ -7,14 +7,14 @@ import type { ListRef } from "../ai/parseOutput";
 export type BoardContext = { boardId: string; workspaceId: string; lists: ListRef[] };
 
 export async function loadBoardContext(boardId: string, userId: string): Promise<BoardContext> {
-  const board = await Board.findById(boardId).select("workspaceId");
+  const board = await Board.findById(boardId).select("workspace");
 
   // A missing board and a board the user cannot see give the SAME answer,
   // so nobody can find out which board ids exist.
   const notFound = new HttpError(404, "NOT_FOUND", "Board not found");
   if (!board) throw notFound;
 
-  const member = await WorkspaceMember.exists({ workspaceId: board.workspaceId, userId });
+  const member = await WorkspaceMember.exists({ workspaceId: board.workspace, userId });
   if (!member) throw notFound;
 
   const lists = await List.find({ boardId: board._id }).sort({ position: 1 }).select("name");
@@ -25,7 +25,7 @@ export async function loadBoardContext(boardId: string, userId: string): Promise
 
   return {
     boardId: String(board._id),
-    workspaceId: String(board.workspaceId),
+    workspaceId: String(board.workspace),
     lists: lists.map((list) => ({ id: String(list._id), name: list.name })),
   };
 }

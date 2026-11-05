@@ -6,27 +6,26 @@ import {
   remove,
   update,
 } from "../controllers/workspace.controller";
-import { authenticate } from "../middleware/auth";
-import { validate } from "../middleware/validate";
+import { protect } from "../middleware/auth.middleware";
+import { validateBody, validateIdParam } from "../middleware/validate.middleware";
 import {
   createWorkspaceSchema,
-  listWorkspacesQuerySchema,
   updateWorkspaceSchema,
-  workspaceIdParamsSchema,
 } from "../validators/workspace.validator";
 
 const router = Router();
 
-router.use(authenticate);
+router.use(protect);
 
-router.post("/", validate({ body: createWorkspaceSchema }), create);
-router.get("/", validate({ query: listWorkspacesQuerySchema }), list);
-router.get("/:workspaceId", validate({ params: workspaceIdParamsSchema }), getById);
+router.post("/", validateBody(createWorkspaceSchema), create);
+router.get("/", list);
+router.get("/:workspaceId", validateIdParam("workspaceId"), getById);
 router.patch(
   "/:workspaceId",
-  validate({ params: workspaceIdParamsSchema, body: updateWorkspaceSchema }),
+  validateIdParam("workspaceId"),
+  validateBody(updateWorkspaceSchema),
   update,
 );
-router.delete("/:workspaceId", validate({ params: workspaceIdParamsSchema }), remove);
+router.delete("/:workspaceId", validateIdParam("workspaceId"), remove);
 
 export default router;

@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { accept, preview } from "../controllers/invite.controller";
-import { authenticate } from "../middleware/auth";
-import { validate } from "../middleware/validate";
+import { protect } from "../middleware/auth.middleware";
+import { validateBody } from "../middleware/validate.middleware";
 import { acceptInviteSchema, previewInviteSchema } from "../validators/invite.validator";
 
 const router = Router();
 
-router.post("/preview", validate({ body: previewInviteSchema }), preview);
-router.post("/accept", authenticate, validate({ body: acceptInviteSchema }), accept);
+router.post("/preview", validateBody(previewInviteSchema), preview);
+router.post("/accept", protect, validateBody(acceptInviteSchema), accept);
 
 export default router;

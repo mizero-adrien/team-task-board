@@ -1,19 +1,21 @@
-export class ApiError extends Error {
-  statusCode: number;
-  code: string;
-  details?: unknown;
+import { HttpError, type ErrorCode } from "./HttpError";
+
+export class ApiError extends HttpError {
+  readonly statusCode: number;
 
   constructor(statusCode: number, message: string, code: string, details?: unknown) {
-    super(message);
+    super(
+      statusCode,
+      code as ErrorCode,
+      message,
+      details && typeof details === "object" ? (details as Record<string, unknown>) : {},
+    );
     this.name = "ApiError";
     this.statusCode = statusCode;
-    this.code = code;
-    this.details = details;
-    Error.captureStackTrace(this, this.constructor);
   }
 
   static badRequest(message: string, details?: unknown): ApiError {
-    return new ApiError(400, message, "BAD_REQUEST", details);
+    return new ApiError(400, message, "VALIDATION_FAILED", details);
   }
 
   static unauthorized(message = "Authentication required"): ApiError {
@@ -33,6 +35,6 @@ export class ApiError extends Error {
   }
 
   static gone(message: string): ApiError {
-    return new ApiError(410, message, "GONE");
+    return new ApiError(410, message, "INVITE_INVALID");
   }
 }

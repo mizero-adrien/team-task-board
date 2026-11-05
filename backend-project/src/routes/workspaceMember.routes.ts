@@ -5,33 +5,33 @@ import {
   remove,
   updateRole,
 } from "../controllers/workspaceMember.controller";
-import { authenticate } from "../middleware/auth";
-import { validate } from "../middleware/validate";
+import { protect } from "../middleware/auth.middleware";
+import { validateBody, validateIdParam } from "../middleware/validate.middleware";
 import {
   addMemberSchema,
   updateMemberRoleSchema,
-  workspaceMemberParamsSchema,
 } from "../validators/workspaceMember.validator";
-import { workspaceIdParamsSchema } from "../validators/workspace.validator";
 
 const router = Router({ mergeParams: true });
 
-router.use(authenticate);
+router.use(protect);
 
-router.get("/", validate({ params: workspaceIdParamsSchema }), list);
+router.get("/", validateIdParam("workspaceId"), list);
 router.post(
   "/",
-  validate({ params: workspaceIdParamsSchema, body: addMemberSchema }),
+  validateIdParam("workspaceId"),
+  validateBody(addMemberSchema),
   add,
 );
 router.patch(
   "/:userId",
-  validate({ params: workspaceMemberParamsSchema, body: updateMemberRoleSchema }),
+  validateIdParam("workspaceId", "userId"),
+  validateBody(updateMemberRoleSchema),
   updateRole,
 );
 router.delete(
   "/:userId",
-  validate({ params: workspaceMemberParamsSchema }),
+  validateIdParam("workspaceId", "userId"),
   remove,
 );
 

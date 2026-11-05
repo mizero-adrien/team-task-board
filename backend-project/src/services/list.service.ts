@@ -68,7 +68,7 @@ async function loadListForMember(listId: string, userId: string) {
     throw new HttpError(404, "NOT_FOUND", "List not found");
   }
 
-  await assertMember(board.workspaceId, userId, "List not found");
+  await assertMember(board.workspace, userId, "List not found");
 
   return { list, board };
 }
@@ -122,7 +122,7 @@ export async function createList(
     throw new HttpError(404, "NOT_FOUND", "Board not found");
   }
 
-  await assertMember(board.workspaceId, actor.id, "Board not found");
+  await assertMember(board.workspace, actor.id, "Board not found");
 
   const listCount = await List.countDocuments({ boardId });
 
@@ -169,7 +169,7 @@ export async function createList(
   }
 
   await logActivity({
-    workspace: board.workspaceId,
+    workspace: board.workspace,
     board: board._id,
     actor,
     type: "list.created",
@@ -200,7 +200,7 @@ export async function updateList(
 
   if (list.name !== previousName) {
     await logActivity({
-      workspace: board.workspaceId,
+      workspace: board.workspace,
       board: board._id,
       actor,
       type: "list.renamed",
@@ -251,7 +251,7 @@ export async function moveList(
   }
 
   await logActivity({
-    workspace: board.workspaceId,
+    workspace: board.workspace,
     board: board._id,
     actor,
     type: "list.reordered",
@@ -320,7 +320,7 @@ export async function deleteList(
   await list.deleteOne();
 
   await logActivity({
-    workspace: board.workspaceId,
+    workspace: board.workspace,
     board: board._id,
     actor,
     type: "list.deleted",

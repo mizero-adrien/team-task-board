@@ -1,6 +1,38 @@
 @base = http://localhost:1000/api
 @token = PASTE_YOUR_TOKEN_HERE
+@workspaceId = PASTE_A_WORKSPACE_ID_HERE
 @boardId = PASTE_A_BOARD_ID_HERE
+
+### Create a board
+# @name board
+POST {{base}}/workspaces/{{workspaceId}}/boards
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Launch the school website", "description": "" }
+
+### List boards in a workspace
+GET {{base}}/workspaces/{{workspaceId}}/boards
+Authorization: Bearer {{token}}
+
+### Get the whole board
+GET {{base}}/boards/{{boardId}}
+Authorization: Bearer {{token}}
+
+### Update a board
+PATCH {{base}}/boards/{{boardId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "School website", "description": null }
+
+### Board activity
+GET {{base}}/boards/{{boardId}}/activity?limit=10
+Authorization: Bearer {{token}}
+
+### Delete a board (owner only)
+DELETE {{base}}/boards/{{boardId}}
+Authorization: Bearer {{token}}
 
 ### AI usage today
 GET {{base}}/ai/usage

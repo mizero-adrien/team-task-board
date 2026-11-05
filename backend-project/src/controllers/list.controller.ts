@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { asyncHandler } from "../utils/AsyncHandler";
+import { asyncHandler } from "../utils/asyncHandler";
 import { HttpError } from "../utils/HttpError";
 import {
   createList,

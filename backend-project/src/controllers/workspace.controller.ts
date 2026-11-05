@@ -7,7 +7,7 @@ import {
   updateWorkspace,
 } from "../services/workspace.service";
 import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/AsyncHandler";
+import { asyncHandler } from "../utils/asyncHandler";
 import { serializeWorkspace } from "../utils/serialize";
 
 function currentUserId(req: Request): string {

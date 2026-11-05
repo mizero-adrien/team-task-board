@@ -7,7 +7,7 @@ import {
   revokeInvite,
 } from "../services/invite.service";
 import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/AsyncHandler";
+import { asyncHandler } from "../utils/asyncHandler";
 import { serializeInvite, serializeWorkspaceMember } from "../utils/serialize";
 
 function currentUserId(req: Request): string {

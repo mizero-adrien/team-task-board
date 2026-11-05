@@ -15,8 +15,8 @@ interface UpdateWorkspaceInput {
 }
 
 interface ListWorkspacesInput {
-  page: number;
-  limit: number;
+  page?: number | string;
+  limit?: number | string;
 }
 
 export async function createWorkspace(
@@ -44,25 +44,27 @@ export async function createWorkspace(
 }
 
 export async function listWorkspacesForUser(userId: string, input: ListWorkspacesInput) {
+  const page = Math.max(1, Number(input.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(input.limit) || 20));
   const memberships = await WorkspaceMember.find({ userId }).select("workspaceId");
   const workspaceIds = memberships.map((membership) => membership.workspaceId);
-  const skip = (input.page - 1) * input.limit;
+  const skip = (page - 1) * limit;
 
   const [items, total] = await Promise.all([
     Workspace.find({ _id: { $in: workspaceIds } })
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(input.limit),
+      .limit(limit),
     Workspace.countDocuments({ _id: { $in: workspaceIds } }),
   ]);
 
   return {
     items,
     pagination: {
-      page: input.page,
-      limit: input.limit,
+      page,
+      limit,
       total,
-      totalPages: Math.ceil(total / input.limit) || 1,
+      totalPages: Math.ceil(total / limit) || 1,
     },
   };
 }

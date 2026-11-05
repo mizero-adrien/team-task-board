@@ -1,6 +1,9 @@
-import express from "express";
 import cors from "cors";
+<<<<<<< HEAD
 import swaggerUi from "swagger-ui-express";
+=======
+import express from "express";
+>>>>>>> origin/main
 import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
 import { openapi } from "./docs/swagger";
 import routes from "./routes";

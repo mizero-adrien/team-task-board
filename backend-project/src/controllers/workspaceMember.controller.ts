@@ -6,7 +6,7 @@ import {
   updateWorkspaceMemberRole,
 } from "../services/workspaceMember.service";
 import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/AsyncHandler";
 import { serializeUser, serializeWorkspaceMember } from "../utils/serialize";
 
 function currentUserId(req: Request): string {

@@ -4,27 +4,24 @@ import {
   list,
   revoke,
 } from "../controllers/invite.controller";
-import { authenticate } from "../middleware/auth";
-import { validate } from "../middleware/validate";
-import {
-  createInviteSchema,
-  inviteWorkspaceParamsSchema,
-  workspaceInviteParamsSchema,
-} from "../validators/invite.validator";
+import { protect } from "../middleware/auth.middleware";
+import { validateBody, validateIdParam } from "../middleware/validate.middleware";
+import { createInviteSchema } from "../validators/invite.validator";
 
 const router = Router({ mergeParams: true });
 
-router.use(authenticate);
+router.use(protect);
 
 router.post(
   "/",
-  validate({ params: inviteWorkspaceParamsSchema, body: createInviteSchema }),
+  validateIdParam("workspaceId"),
+  validateBody(createInviteSchema),
   create,
 );
-router.get("/", validate({ params: inviteWorkspaceParamsSchema }), list);
+router.get("/", validateIdParam("workspaceId"), list);
 router.delete(
   "/:inviteId",
-  validate({ params: workspaceInviteParamsSchema }),
+  validateIdParam("workspaceId", "inviteId"),
   revoke,
 );
 

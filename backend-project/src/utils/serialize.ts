@@ -9,7 +9,7 @@ export function serializeUser(user: IUser) {
     name: user.name,
     email: user.email,
     role: user.role,
-    isBlocked: user.isBlocked,
+    blocked: user.blocked,
     blockReason: user.blockReason ?? null,
     lastLoginAt: user.lastLoginAt ?? null,
     createdAt: user.createdAt,

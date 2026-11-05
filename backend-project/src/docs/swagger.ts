@@ -36,6 +36,8 @@ export const openapi = {
   tags: [
     { name: "Health", description: "Service status" },
     { name: "Auth", description: "Registration, login and the current user" },
+    { name: "Boards", description: "Boards and their activity feed" },
+    { name: "Lists", description: "Lists on a board" },
     { name: "Cards", description: "Cards, moves, bulk creation and personal work" },
     { name: "AI", description: "AI goal breakdown and daily usage" },
     { name: "Workspaces", description: "Workspace management" },
@@ -374,6 +376,269 @@ export const openapi = {
           "404": notFound,
           "429": errorResponse("The daily AI breakdown limit has been reached"),
           "502": errorResponse("The AI provider is unavailable or returned unusable output"),
+        },
+      },
+    },
+    "/workspaces/{workspaceId}/boards": {
+      get: {
+        tags: ["Boards"],
+        summary: "List boards in a workspace",
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: "#/components/parameters/WorkspaceId" }],
+        responses: {
+          "200": {
+            description: "Boards with list and card counts",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "array",
+                  items: { $ref: "#/components/schemas/BoardSummary" },
+                },
+              },
+            },
+          },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
+        },
+      },
+      post: {
+        tags: ["Boards"],
+        summary: "Create a board",
+        description:
+          "The new board starts with the lists To do, Doing and Done.",
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: "#/components/parameters/WorkspaceId" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/BoardCreateRequest" },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "The created board",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Board" },
+              },
+            },
+          },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
+          "409": errorResponse("The workspace already has 50 boards"),
+        },
+      },
+    },
+    "/boards/{boardId}": {
+      get: {
+        tags: ["Boards"],
+        summary: "Get a board with its lists and cards",
+        description:
+          "Returns the board, the current user's role, workspace members and every list and card on the board.",
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: "#/components/parameters/BoardId" }],
+        responses: {
+          "200": {
+            description: "The board view",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/BoardView" },
+              },
+            },
+          },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
+        },
+      },
+      patch: {
+        tags: ["Boards"],
+        summary: "Update a board",
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: "#/components/parameters/BoardId" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/BoardUpdateRequest" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "The updated board",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/Board" },
+              },
+            },
+          },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
+        },
+      },
+      delete: {
+        tags: ["Boards"],
+        summary: "Delete a board",
+        description:
+          "Only a workspace owner can delete a board. Its comments, cards and lists are deleted first.",
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: "#/components/parameters/BoardId" }],
+        responses: {
+          "204": { description: "The board was deleted" },
+          "400": validationFailed,
+          "401": unauthorized,
+          "403": forbidden,
+          "404": notFound,
+        },
+      },
+    },
+    "/boards/{boardId}/activity": {
+      get: {
+        tags: ["Boards"],
+        summary: "Get the board activity feed",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { $ref: "#/components/parameters/BoardId" },
+          { $ref: "#/components/parameters/Limit" },
+          {
+            name: "before",
+            in: "query",
+            required: false,
+            schema: { type: "string" },
+            description: "The nextCursor from the previous page",
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Newest activity first",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ActivityPage" },
+              },
+            },
+          },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
+        },
+      },
+    },
+    "/boards/{boardId}/lists": {
+      post: {
+        tags: ["Lists"],
+        summary: "Create a list on a board",
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: "#/components/parameters/BoardId" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ListCreateRequest" },
+            },
+          },
+        },
+        responses: {
+          "201": {
+            description: "The created list",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/List" },
+              },
+            },
+          },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
+          "409": errorResponse("The list name is taken or the board already has 20 lists"),
+        },
+      },
+    },
+    "/lists/{listId}": {
+      patch: {
+        tags: ["Lists"],
+        summary: "Update a list",
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: "#/components/parameters/ListId" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ListUpdateRequest" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "The updated list",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/List" },
+              },
+            },
+          },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
+          "409": errorResponse("The list name is already used on this board"),
+        },
+      },
+      delete: {
+        tags: ["Lists"],
+        summary: "Delete a list",
+        description:
+          "A list with cards is refused unless moveCardsTo names another list on the same board.",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { $ref: "#/components/parameters/ListId" },
+          {
+            name: "moveCardsTo",
+            in: "query",
+            required: false,
+            schema: objectId,
+            description: "Move this list's cards to another list before deleting it",
+          },
+        ],
+        responses: {
+          "204": { description: "The list was deleted" },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
+          "409": errorResponse("The list still has cards or the target list is full"),
+        },
+      },
+    },
+    "/lists/{listId}/move": {
+      post: {
+        tags: ["Lists"],
+        summary: "Move a list",
+        security: [{ bearerAuth: [] }],
+        parameters: [{ $ref: "#/components/parameters/ListId" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ListMoveRequest" },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "The moved list with its new position",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/List" },
+              },
+            },
+          },
+          "400": validationFailed,
+          "401": unauthorized,
+          "404": notFound,
         },
       },
     },
@@ -1211,6 +1476,218 @@ export const openapi = {
             example: ["Some dates were moved to fit before the deadline."],
           },
           usage: { $ref: "#/components/schemas/AiUsage" },
+        },
+      },
+      Board: {
+        type: "object",
+        required: ["id", "workspaceId", "name", "description", "createdAt"],
+        properties: {
+          id: objectId,
+          workspaceId: objectId,
+          name: { type: "string", example: "Launch board" },
+          description: { type: "string", nullable: true, example: null },
+          createdAt: { type: "string", format: "date-time" },
+        },
+      },
+      BoardSummary: {
+        allOf: [
+          { $ref: "#/components/schemas/Board" },
+          {
+            type: "object",
+            required: ["listCount", "cardCount"],
+            properties: {
+              listCount: { type: "integer", example: 3 },
+              cardCount: { type: "integer", example: 12 },
+            },
+          },
+        ],
+      },
+      BoardView: {
+        type: "object",
+        required: ["board", "role", "members", "lists", "cards"],
+        properties: {
+          board: { $ref: "#/components/schemas/Board" },
+          role: {
+            type: "string",
+            enum: ["owner", "member"],
+            example: "member",
+          },
+          members: {
+            type: "array",
+            items: { $ref: "#/components/schemas/Person" },
+          },
+          lists: {
+            type: "array",
+            items: { $ref: "#/components/schemas/List" },
+          },
+          cards: {
+            type: "array",
+            items: { $ref: "#/components/schemas/Card" },
+          },
+        },
+      },
+      BoardCreateRequest: {
+        type: "object",
+        additionalProperties: false,
+        required: ["name"],
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 80,
+            example: "Launch board",
+          },
+          description: {
+            type: "string",
+            maxLength: 500,
+            nullable: true,
+            example: null,
+          },
+        },
+      },
+      BoardUpdateRequest: {
+        type: "object",
+        additionalProperties: false,
+        minProperties: 1,
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 80,
+            example: "Launch board",
+          },
+          description: {
+            type: "string",
+            maxLength: 500,
+            nullable: true,
+            example: null,
+          },
+        },
+      },
+      List: {
+        type: "object",
+        required: [
+          "id",
+          "boardId",
+          "name",
+          "position",
+          "isDone",
+          "createdAt",
+          "updatedAt",
+        ],
+        properties: {
+          id: objectId,
+          boardId: objectId,
+          name: { type: "string", example: "To do" },
+          position: { type: "number", example: 1024 },
+          isDone: { type: "boolean", example: false },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      ListCreateRequest: {
+        type: "object",
+        additionalProperties: false,
+        required: ["name"],
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 50,
+            example: "Review",
+          },
+          afterListId: {
+            ...objectId,
+            nullable: true,
+            description: "Place the new list after this list; omit to add it last",
+          },
+        },
+      },
+      ListUpdateRequest: {
+        type: "object",
+        additionalProperties: false,
+        minProperties: 1,
+        properties: {
+          name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 50,
+            example: "Review",
+          },
+          isDone: { type: "boolean", example: false },
+        },
+      },
+      ListMoveRequest: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          afterListId: {
+            ...objectId,
+            nullable: true,
+            description: "Move after this list; omit to move it last, null to move it first",
+          },
+        },
+      },
+      Activity: {
+        type: "object",
+        required: [
+          "id",
+          "type",
+          "actor",
+          "cardId",
+          "meta",
+          "message",
+          "createdAt",
+        ],
+        properties: {
+          id: objectId,
+          type: {
+            type: "string",
+            enum: [
+              "workspace.created",
+              "member.joined",
+              "member.removed",
+              "board.created",
+              "board.renamed",
+              "board.deleted",
+              "list.created",
+              "list.renamed",
+              "list.reordered",
+              "list.deleted",
+              "card.created",
+              "card.updated",
+              "card.moved",
+              "card.assigned",
+              "card.unassigned",
+              "card.deleted",
+              "comment.added",
+              "comment.deleted",
+            ],
+            example: "list.created",
+          },
+          actor: { $ref: "#/components/schemas/Person" },
+          cardId: { ...objectId, nullable: true },
+          meta: { type: "object", additionalProperties: true },
+          message: {
+            type: "string",
+            example: "Ada Lovelace added the list Review",
+          },
+          createdAt: { type: "string", format: "date-time" },
+        },
+      },
+      ActivityPage: {
+        type: "object",
+        required: ["items", "nextCursor"],
+        properties: {
+          items: {
+            type: "array",
+            items: { $ref: "#/components/schemas/Activity" },
+          },
+          nextCursor: {
+            type: "string",
+            nullable: true,
+            description: "Pass as before to fetch the next page; null on the last page",
+          },
         },
       },
       Workspace: {

@@ -3,6 +3,8 @@
 > **Status:** Draft v1, for team review
 > **Companion documents:** `app_concept.md`, `schema.md`
 > **Base path:** `/api`
+> **Interactive docs:** `/api-docs` when the API is running
+> **OpenAPI JSON:** `/openapi.json`
 
 ---
 

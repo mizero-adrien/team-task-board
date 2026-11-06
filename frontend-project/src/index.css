@@ -1,12 +1,46 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
+  --color-cream: #faf8f3;
+  --color-sand: #f2ede3;
+  --color-line: #e5dfd3;
+
+  --color-ink: #0a1f1a;
+  --color-forest: #0b3b33;
+  --color-forest-dark: #06231e;
+
+  --color-primary: #0e8f72;
+  --color-primary-dark: #0b7360;
+  --color-primary-soft: #e6f6f0;
+
+  --color-accent: #f0a93b;
+  --color-accent-soft: #fef3e2;
+
   --color-brand: #4f46e5;
   --color-brand-dark: #4338ca;
   --color-brand-soft: #eef2ff;
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: #ffffff;
+  }
+
   button:not(:disabled),
   [role="button"] {
     cursor: pointer;

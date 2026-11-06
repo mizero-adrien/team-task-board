@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router";
 import AppLayout from "./core/layout/AppLayout";
 import NotFoundPage from "./core/pages/NotFoundPage";
 import AdminPage from "./features/admin/AdminPage";
@@ -7,12 +7,15 @@ import LoginPage from "./features/auth/LoginPage";
 import SignUpPage from "./features/auth/SignUpPage";
 import BoardPage from "./features/boards/BoardPage";
 import MyCardsPage from "./features/cards/MyCardsPage";
+import HomePage from "./features/landing/HomePage";
 import WorkspacePage from "./features/workspaces/WorkspacePage";
 import WorkspacesPage from "./features/workspaces/WorkspacesPage";
 
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<HomePage />} />
+
       <Route element={<GuestOnly />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
@@ -20,7 +23,6 @@ function App() {
 
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
-          <Route index element={<Navigate to="/workspaces" replace />} />
           <Route path="/workspaces" element={<WorkspacesPage />} />
           <Route path="/workspaces/:workspaceId" element={<WorkspacePage />} />
           <Route path="/boards/:boardId" element={<BoardPage />} />

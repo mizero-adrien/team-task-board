@@ -1,7 +1,10 @@
 import { Route, Routes } from "react-router";
 import AppLayout from "./core/layout/AppLayout";
 import NotFoundPage from "./core/pages/NotFoundPage";
+import AdminLayout from "./features/admin/AdminLayout";
 import AdminPage from "./features/admin/AdminPage";
+import AdminUsersPage from "./features/admin/AdminUsersPage";
+import AdminWorkspacesPage from "./features/admin/AdminWorkspacesPage";
 import { GuestOnly, RequireAdmin, RequireAuth } from "./features/auth/guards";
 import LoginPage from "./features/auth/LoginPage";
 import SignUpPage from "./features/auth/SignUpPage";
@@ -27,8 +30,13 @@ function App() {
           <Route path="/workspaces/:workspaceId" element={<WorkspacePage />} />
           <Route path="/boards/:boardId" element={<BoardPage />} />
           <Route path="/my-cards" element={<MyCardsPage />} />
-          <Route element={<RequireAdmin />}>
-            <Route path="/admin" element={<AdminPage />} />
+        </Route>
+
+        <Route element={<RequireAdmin />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminPage />} />
+            <Route path="users" element={<AdminUsersPage />} />
+            <Route path="workspaces" element={<AdminWorkspacesPage />} />
           </Route>
         </Route>
       </Route>

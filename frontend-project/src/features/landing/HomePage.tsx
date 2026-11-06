@@ -1,14 +1,12 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link } from "react-router";
 import {
   Activity,
   ArrowRight,
   ArrowUpRight,
-  CalendarDays,
   Check,
   CheckCircle2,
   ChevronRight,
-  Clock,
   LayoutGrid,
   ListChecks,
   Mail,
@@ -68,35 +66,35 @@ const features = [
   },
   {
     icon: ListChecks,
-    tone: "bg-[#e9f0ff] text-[#3b5bdb]",
+    tone: "bg-[#efe4d8] text-[#7a4a2b]",
     title: "Boards that match your flow",
     description:
       "Start with To do, Doing and Done. Rename, reorder and add lists as your team finds the way it likes to work.",
   },
   {
     icon: Users,
-    tone: "bg-accent-soft text-amber-700",
+    tone: "bg-accent-soft text-[#8a5527]",
     title: "Clear ownership",
     description:
       "Give every card one assignee and a due date. Open your board and see exactly who is responsible for what.",
   },
   {
     icon: Sparkles,
-    tone: "bg-[#f3ecff] text-[#7c3aed]",
+    tone: "bg-[#f2dfcb] text-[#a35c2c]",
     title: "AI task breakdown",
     description:
       "Describe a goal and get a suggested first plan in seconds. Nothing is added until your team chooses it.",
   },
   {
     icon: MessageSquare,
-    tone: "bg-[#fdeef0] text-[#c2415a]",
+    tone: "bg-[#f7e7de] text-[#a5482f]",
     title: "Comments in context",
     description:
       "Discuss the task on the card itself. Decisions stay next to the work instead of getting lost in chat threads.",
   },
   {
     icon: Activity,
-    tone: "bg-[#e6f7f4] text-teal-700",
+    tone: "bg-[#eee3d4] text-[#6f4a2c]",
     title: "A history you can trust",
     description:
       "Every created card, edit, move and comment is recorded automatically, so the team can always see what changed.",
@@ -140,14 +138,14 @@ const audiences = [
     title: "Small teams",
     description:
       "A lightweight shared board with the clarity of a real project tool, and none of the enterprise complexity.",
-    tone: "bg-[#e9f0ff] text-[#3b5bdb]",
+    tone: "bg-[#efe4d8] text-[#7a4a2b]",
   },
   {
     icon: Users,
     title: "Clubs & communities",
     description:
       "Coordinate volunteers, events and shared goals in one place that everyone can understand on day one.",
-    tone: "bg-accent-soft text-amber-700",
+    tone: "bg-accent-soft text-[#8a5527]",
   },
 ];
 
@@ -179,16 +177,6 @@ const footerLinks = [
   },
 ];
 
-function Avatar({ initials, className }: { initials: string; className: string }) {
-  return (
-    <span
-      className={`flex h-6 w-6 items-center justify-center rounded-full text-[10px] font-bold text-white ring-2 ring-white ${className}`}
-    >
-      {initials}
-    </span>
-  );
-}
-
 function StatPill({
   icon: Icon,
   value,
@@ -206,187 +194,6 @@ function StatPill({
       <div>
         <p className="text-lg font-bold leading-none text-ink">{value}</p>
         <p className="mt-1 text-[11px] font-medium text-ink/55">{label}</p>
-      </div>
-    </div>
-  );
-}
-
-function BoardPreview() {
-  return (
-    <div className="relative mx-auto w-full max-w-xl">
-      <div className="absolute -inset-8 -z-10 rounded-[3rem] bg-gradient-to-tr from-primary/20 via-emerald-200/40 to-accent/20 blur-2xl" />
-
-      <div className="relative overflow-hidden rounded-[2rem] border border-line bg-white shadow-2xl shadow-forest/10">
-        <div className="flex items-center gap-2 border-b border-line/70 bg-sand/50 px-4 py-3.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-rose-300" />
-          <span className="h-2.5 w-2.5 rounded-full bg-amber-300" />
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-300" />
-          <span className="ml-2 truncate text-xs font-semibold text-ink">Website launch</span>
-          <span className="ml-auto flex shrink-0 items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-medium text-ink/55 ring-1 ring-line">
-            <Users className="h-3 w-3" />
-            Group 8
-          </span>
-        </div>
-
-        <div className="grid gap-2.5 bg-[#f7f6f1] p-4 sm:grid-cols-3">
-          <div className="rounded-2xl bg-white/60 p-2.5 ring-1 ring-line/60">
-            <div className="mb-2 flex items-center gap-1.5 px-1">
-              <span className="h-2 w-2 rounded-full bg-sky-500" />
-              <span className="text-xs font-semibold text-ink">To do</span>
-              <span className="ml-auto text-[10px] font-medium text-ink/35">2</span>
-            </div>
-            <div className="space-y-2">
-              <div className="rounded-xl border border-line/80 bg-white p-3 shadow-sm">
-                <span className="inline-block rounded bg-[#f3ecff] px-1.5 py-0.5 text-[9px] font-bold text-[#7c3aed]">
-                  Design
-                </span>
-                <p className="mt-2 text-[12px] font-semibold leading-snug text-ink">
-                  Design the homepage layout
-                </p>
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex -space-x-1.5">
-                    <Avatar initials="RM" className="bg-rose-400" />
-                    <Avatar initials="UI" className="bg-sky-400" />
-                  </div>
-                  <span className="flex items-center gap-1 text-[10px] text-ink/40">
-                    <CalendarDays className="h-3 w-3" />
-                    Fri
-                  </span>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-line/80 bg-white p-3 shadow-sm">
-                <span className="inline-block rounded bg-primary-soft px-1.5 py-0.5 text-[9px] font-bold text-primary">
-                  Content
-                </span>
-                <p className="mt-2 text-[12px] font-semibold leading-snug text-ink">
-                  Collect content from the school
-                </p>
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex -space-x-1.5">
-                    <Avatar initials="FN" className="bg-amber-400" />
-                  </div>
-                  <span className="flex items-center gap-1 text-[10px] text-ink/40">
-                    <MessageSquare className="h-3 w-3" />
-                    3
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl bg-white/60 p-2.5 ring-1 ring-line/60">
-            <div className="mb-2 flex items-center gap-1.5 px-1">
-              <span className="h-2 w-2 rounded-full bg-amber-500" />
-              <span className="text-xs font-semibold text-ink">Doing</span>
-              <span className="ml-auto text-[10px] font-medium text-ink/35">2</span>
-            </div>
-            <div className="space-y-2">
-              <div className="rounded-xl border border-line/80 bg-white p-3 shadow-sm">
-                <span className="inline-block rounded bg-[#e6f7f4] px-1.5 py-0.5 text-[9px] font-bold text-teal-700">
-                  Frontend
-                </span>
-                <p className="mt-2 text-[12px] font-semibold leading-snug text-ink">
-                  Build the navigation
-                </p>
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-sand">
-                  <div className="h-full w-2/3 rounded-full bg-primary" />
-                </div>
-                <div className="mt-2 flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-primary">In progress</span>
-                  <Avatar initials="AM" className="bg-emerald-400" />
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-line/80 bg-white p-3 shadow-sm">
-                <span className="inline-block rounded bg-accent-soft px-1.5 py-0.5 text-[9px] font-bold text-amber-700">
-                  Planning
-                </span>
-                <p className="mt-2 text-[12px] font-semibold leading-snug text-ink">
-                  Write the launch checklist
-                </p>
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex -space-x-1.5">
-                    <Avatar initials="RM" className="bg-rose-400" />
-                  </div>
-                  <span className="flex items-center gap-1 text-[10px] text-ink/40">
-                    <Clock className="h-3 w-3" />
-                    Tue
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl bg-white/60 p-2.5 ring-1 ring-line/60">
-            <div className="mb-2 flex items-center gap-1.5 px-1">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              <span className="text-xs font-semibold text-ink">Done</span>
-              <span className="ml-auto text-[10px] font-medium text-ink/35">2</span>
-            </div>
-            <div className="space-y-2">
-              <div className="rounded-xl border border-line/80 bg-white p-3 shadow-sm">
-                <span className="inline-flex items-center gap-1 rounded bg-primary-soft px-1.5 py-0.5 text-[9px] font-bold text-primary">
-                  <Check className="h-2.5 w-2.5" />
-                  Done
-                </span>
-                <p className="mt-2 text-[12px] font-medium leading-snug text-ink/45 line-through decoration-ink/20">
-                  Set up the project workspace
-                </p>
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex -space-x-1.5">
-                    <Avatar initials="UI" className="bg-sky-400" />
-                  </div>
-                  <span className="text-[10px] text-ink/40">Mon</span>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-line/80 bg-white p-3 shadow-sm">
-                <span className="inline-flex items-center gap-1 rounded bg-primary-soft px-1.5 py-0.5 text-[9px] font-bold text-primary">
-                  <Check className="h-2.5 w-2.5" />
-                  Done
-                </span>
-                <p className="mt-2 text-[12px] font-medium leading-snug text-ink/45 line-through decoration-ink/20">
-                  Invite the team
-                </p>
-                <div className="mt-3 flex items-center justify-between">
-                  <div className="flex -space-x-1.5">
-                    <Avatar initials="FN" className="bg-amber-400" />
-                    <Avatar initials="AM" className="bg-emerald-400" />
-                  </div>
-                  <span className="text-[10px] text-ink/40">Mon</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                className="flex w-full items-center gap-1.5 rounded-xl border border-dashed border-line px-3 py-2 text-[11px] font-medium text-ink/40"
-              >
-                <Plus className="h-3.5 w-3.5" />
-                Add a card
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="absolute -bottom-5 -left-4 hidden items-center gap-3 rounded-2xl border border-line bg-white px-4 py-3 shadow-xl shadow-forest/10 sm:flex">
-        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f3ecff] text-[#7c3aed]">
-          <Sparkles className="h-4 w-4" />
-        </span>
-        <div>
-          <p className="text-xs font-bold text-ink">AI added 5 cards</p>
-          <p className="text-[10px] text-ink/50">Website launch plan</p>
-        </div>
-      </div>
-
-      <div className="absolute -right-3 -top-5 hidden items-center gap-2 rounded-full border border-line bg-white px-3 py-2 shadow-lg shadow-forest/10 sm:flex">
-        <div className="flex -space-x-1.5">
-          <Avatar initials="RM" className="bg-rose-400" />
-          <Avatar initials="UI" className="bg-sky-400" />
-          <Avatar initials="FN" className="bg-amber-400" />
-        </div>
-        <span className="text-[10px] font-semibold text-ink/60">5 teammates</span>
       </div>
     </div>
   );
@@ -501,7 +308,7 @@ function Hero() {
         />
       </div>
 
-      <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-4 pb-24 pt-16 sm:px-6 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12 lg:px-8 lg:pb-32 lg:pt-24">
+      <div className="relative mx-auto max-w-4xl px-4 pb-24 pt-16 text-center sm:px-6 lg:px-8 lg:pb-32 lg:pt-24">
         <div>
           <a
             href="#ai"
@@ -512,7 +319,7 @@ function Hero() {
             <ChevronRight className="h-3.5 w-3.5" />
           </a>
 
-          <h1 className="mt-6 max-w-2xl text-4xl font-extrabold leading-[1.04] tracking-tight text-ink sm:text-6xl lg:text-7xl">
+          <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-extrabold leading-[1.04] tracking-tight text-ink sm:text-6xl lg:text-7xl">
             Turn a big goal into a plan your team can{" "}
             <span className="relative inline-block text-primary">
               finish.
@@ -533,13 +340,13 @@ function Hero() {
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-ink/60 sm:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-ink/60 sm:text-lg">
             TeamBoard is a shared board for student teams and small teams. Plan work in lists and
             cards, assign every task, follow progress at a glance, and let the AI helper break a
             big goal into your first set of cards.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
               to="/signup"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-forest px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-forest/20 transition-colors hover:bg-forest-dark"
@@ -556,14 +363,12 @@ function Hero() {
             </a>
           </div>
 
-          <div className="mt-9 grid max-w-lg grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="mx-auto mt-9 grid max-w-xl grid-cols-2 gap-3 text-left sm:grid-cols-3">
             <StatPill icon={ListChecks} value="3" label="lists to start" />
             <StatPill icon={Sparkles} value="10" label="AI cards per goal" />
             <StatPill icon={Users} value="1" label="shared source of truth" />
           </div>
         </div>
-
-        <BoardPreview />
       </div>
     </section>
   );
@@ -762,7 +567,7 @@ function Workflow() {
               <div className="mt-4 space-y-3">
                 {[
                   { name: "Launch the school website", cards: 12, done: 7, color: "bg-primary" },
-                  { name: "Science fair booth", cards: 8, done: 5, color: "bg-[#7c3aed]" },
+                  { name: "Science fair booth", cards: 8, done: 5, color: "bg-[#a35c2c]" },
                   { name: "Team presentation", cards: 6, done: 2, color: "bg-accent" },
                 ].map((board) => (
                   <div
@@ -805,7 +610,7 @@ function AiSection() {
           className="relative overflow-hidden rounded-[2rem] bg-forest px-6 py-14 sm:px-10 lg:px-16 lg:py-20"
           style={{
             backgroundImage:
-              "radial-gradient(circle at 15% 15%, rgba(14, 143, 114, 0.45), transparent 45%), radial-gradient(circle at 85% 85%, rgba(240, 169, 59, 0.22), transparent 45%)",
+              "radial-gradient(circle at 15% 15%, rgba(139, 90, 52, 0.5), transparent 45%), radial-gradient(circle at 85% 85%, rgba(201, 138, 75, 0.24), transparent 45%)",
           }}
         >
           <div
@@ -819,7 +624,7 @@ function AiSection() {
 
           <div className="relative grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold text-emerald-100 ring-1 ring-white/15">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold text-[#f2dfcb] ring-1 ring-white/15">
                 <Sparkles className="h-3.5 w-3.5" />
                 AI task breakdown
               </span>
@@ -839,7 +644,7 @@ function AiSection() {
                   "The AI never assigns work to people",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-sm text-white/80">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300" />
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#e0b98c]" />
                     {item}
                   </li>
                 ))}
@@ -847,7 +652,7 @@ function AiSection() {
 
               <Link
                 to="/signup"
-                className="mt-9 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-forest transition-colors hover:bg-emerald-50"
+                className="mt-9 inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-forest transition-colors hover:bg-[#fbf2e8]"
               >
                 Try the AI helper
                 <ArrowRight className="h-4 w-4" />
@@ -856,15 +661,15 @@ function AiSection() {
 
             <div className="rounded-3xl border border-white/15 bg-white/5 p-4 shadow-2xl backdrop-blur sm:p-5">
               <div className="flex items-center gap-2 border-b border-white/10 pb-3">
-                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-accent text-forest">
+                <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-[#c98a4b] to-accent text-forest">
                   <Sparkles className="h-4 w-4" />
                 </span>
                 <p className="text-xs font-bold text-white">Break down a goal</p>
-                <span className="ml-auto h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="ml-auto h-2 w-2 rounded-full bg-[#c98a4b]" />
               </div>
 
               <div className="mt-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-200">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-[#e6c6a0]">
                   You
                 </p>
                 <p className="mt-1.5 text-sm font-medium text-white">
@@ -874,9 +679,9 @@ function AiSection() {
 
               <div className="mt-3 rounded-2xl bg-white p-4 text-ink shadow-xl">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-[#7c3aed]" />
+                  <Sparkles className="h-4 w-4 text-[#a35c2c]" />
                   <p className="text-xs font-bold">Suggested cards</p>
-                  <span className="ml-auto rounded-full bg-[#f3ecff] px-2 py-0.5 text-[10px] font-bold text-[#7c3aed]">
+                  <span className="ml-auto rounded-full bg-[#f2dfcb] px-2 py-0.5 text-[10px] font-bold text-[#a35c2c]">
                     5 ideas
                   </span>
                 </div>
@@ -1039,14 +844,14 @@ function CallToAction() {
           <div className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full bg-accent/20 blur-3xl" />
 
           <div className="relative mx-auto max-w-2xl">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold text-emerald-50 ring-1 ring-white/20">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-bold text-[#f7ecdf] ring-1 ring-white/20">
               <Rocket className="h-3.5 w-3.5" />
               Start your next project
             </span>
             <h2 className="mt-6 text-3xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-5xl">
               Your next project starts on one clear board
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-emerald-50/80">
+            <p className="mt-5 text-base leading-relaxed text-[#f7ecdf]/80">
               Turn a big goal into a plan your whole team can see, own and finish. TeamBoard is
               free for small teams and ready in minutes.
             </p>
@@ -1054,7 +859,7 @@ function CallToAction() {
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link
                 to="/signup"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-forest shadow-lg transition-colors hover:bg-emerald-50 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-forest shadow-lg transition-colors hover:bg-[#fbf2e8] sm:w-auto"
               >
                 Get started free
                 <ArrowRight className="h-4 w-4" />
@@ -1067,7 +872,7 @@ function CallToAction() {
               </a>
             </div>
 
-            <p className="mt-5 text-xs font-medium text-emerald-50/70">
+            <p className="mt-5 text-xs font-medium text-[#f7ecdf]/70">
               No credit card required · Free for teams of 3–10
             </p>
           </div>
@@ -1084,7 +889,7 @@ function Footer() {
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
             <a href="#top" className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-emerald-400 text-white">
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-[#c98a4b] text-white">
                 <LayoutGrid className="h-5 w-5" />
               </span>
               <span className="text-lg font-extrabold tracking-tight text-white">TeamBoard</span>

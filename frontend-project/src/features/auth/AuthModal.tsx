@@ -96,7 +96,7 @@ function AuthModal({ titleId, title, subtitle, onClose, children, footer }: Prop
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          className="relative max-h-[calc(100dvh-2rem)] w-full overflow-y-auto rounded-lg bg-white shadow-[0_24px_70px_-20px_rgba(15,23,42,0.45)] sm:max-w-[380px]"
+          className="relative max-h-[calc(100dvh-2rem)] w-full overflow-y-auto rounded-lg bg-white shadow-[0_24px_70px_-20px_rgba(15,23,42,0.45)] sm:max-w-[420px]"
         >
           <button
             type="button"

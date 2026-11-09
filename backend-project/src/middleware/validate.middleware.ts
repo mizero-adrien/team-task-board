@@ -4,23 +4,37 @@ import { HttpError } from "../utils/HttpError";
 
 // Checks req.body against a Zod schema. On success, req.body is REPLACED by the
 // parsed result, so unknown fields (like a "role" sent at sign-up) are dropped.
+const validationError = (issues: { path: PropertyKey[]; message: string }[]) =>
+  new HttpError(400, "VALIDATION_FAILED", "Validation failed", {
+    errors: issues.map((issue) => ({
+      field: issue.path.join("."),
+      message: issue.message,
+    })),
+  });
+
 export const validateBody =
   (schema: ZodType): RequestHandler =>
   (req, _res, next) => {
     const result = schema.safeParse(req.body ?? {});
 
     if (!result.success) {
-      return next(
-        new HttpError(400, "VALIDATION_FAILED", "Validation failed", {
-          errors: result.error.issues.map((issue) => ({
-            field: issue.path.join("."),
-            message: issue.message,
-          })),
-        })
-      );
+      return next(validationError(result.error.issues));
     }
 
     req.body = result.data;
+    next();
+  };
+
+export const validateQuery =
+  (schema: ZodType): RequestHandler =>
+  (req, res, next) => {
+    const result = schema.safeParse(req.query ?? {});
+
+    if (!result.success) {
+      return next(validationError(result.error.issues));
+    }
+
+    res.locals.query = result.data;
     next();
   };
 

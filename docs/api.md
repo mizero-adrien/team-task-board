@@ -140,9 +140,15 @@ Every error has the same shape, so the frontend handles them in one place:
 | | `GET /ai/usage` | User | Fabrice |
 | **Admin** | `GET /admin/stats` | Admin | Ubald |
 | | `GET /admin/users` | Admin | Ubald |
+| | `POST /admin/users` | Admin | Ubald |
+| | `PATCH /admin/users/:userId` | Admin | Ubald |
+| | `DELETE /admin/users/:userId` | Admin | Ubald |
 | | `POST /admin/users/:userId/block` | Admin | Ubald |
 | | `POST /admin/users/:userId/unblock` | Admin | Ubald |
 | | `GET /admin/workspaces` | Admin | Ubald |
+| | `POST /admin/workspaces` | Admin | Ubald |
+| | `PATCH /admin/workspaces/:workspaceId` | Admin | Ubald |
+| | `DELETE /admin/workspaces/:workspaceId` | Admin | Ubald |
 
 **Route order warning (Express):** `GET /cards/mine` must be registered **before** `GET /cards/:cardId`, or "mine" is read as a card id.
 
@@ -695,14 +701,22 @@ All admin routes need the `admin` role. A normal user gets 403.
   "cardsByDay": [
     { "date": "2026-11-04", "count": 12 },
     { "date": "2026-11-05", "count": 30 }
+  ],
+  "usersByDay": [
+    { "date": "2026-11-04", "count": 2 },
+    { "date": "2026-11-05", "count": 1 }
+  ],
+  "workspacesByDay": [
+    { "date": "2026-11-04", "count": 1 },
+    { "date": "2026-11-05", "count": 0 }
   ]
 }
 ```
-`cardsThisWeek` counts cards created in the **last 7 days**. `cardsByDay` has seven entries, including days with a count of 0.
+`cardsThisWeek` counts cards created in the **last 7 days**. All `*ByDay` arrays have seven entries, including days with a count of 0.
 
 ### `GET /admin/users`
 
-Query: `search` (name or email), `blocked` (`true` or `false`), `page`, `limit`.
+Query: `search` (name or email), `blocked` (`true` or `false`), `role` (`user` or `admin`), `page`, `limit`.
 
 **200**
 ```json
@@ -725,6 +739,24 @@ Query: `search` (name or email), `blocked` (`true` or `false`), `page`, `limit`.
   "limit": 20
 }
 ```
+
+### `POST /admin/users`
+
+```json
+{ "name": "Sam Test", "email": "sam@example.com", "password": "secret123", "role": "user" }
+```
+**201:** the user object. **Errors:** 409 `EMAIL_TAKEN`, 400 `VALIDATION_FAILED`.
+
+### `PATCH /admin/users/:userId`
+
+Send any of `name`, `email`, `password`, `role`. A blank password is omitted.
+Admins cannot remove their own admin role. **200:** the user object.
+
+### `DELETE /admin/users/:userId`
+
+**204:** no body. Admins cannot delete admin accounts or themselves. Users who still own
+workspaces must have those workspaces deleted or transferred first. Membership, comments,
+AI usage, and assigned cards are cleaned up. **Errors:** 403, 409 `CONFLICT`.
 
 ### `POST /admin/users/:userId/block`
 
@@ -753,6 +785,25 @@ Query: `search` (name), `page`, `limit`.
   "limit": 20
 }
 ```
+Workspace items also include `ownerId`, `description`, and `updatedAt`.
+
+### `POST /admin/workspaces`
+
+```json
+{ "name": "Group 8", "description": "Team space", "ownerId": "665f0f...05" }
+```
+The owner must be an existing user. **201:** the workspace object. The owner is added as
+the first member.
+
+### `PATCH /admin/workspaces/:workspaceId`
+
+Send `name` and/or `description`. **200:** the workspace object.
+
+### `DELETE /admin/workspaces/:workspaceId`
+
+**204:** no body. Also deletes the workspace's boards, lists, cards, comments, activity,
+invites, members, AI requests, and memberships.
+
 Admins see **counts and details only**. There is no admin route that reads a board's cards or comments.
 
 ## 13. Which routes each screen uses
@@ -770,7 +821,7 @@ Admins see **counts and details only**. There is no admin route that reads a boa
 | Card popup | `GET /cards/:id`, `PATCH /cards/:id`, `POST /cards/:id/move`, comments routes |
 | AI modal and preview | `GET /ai/usage`, `POST /boards/:id/ai/breakdown`, `POST /boards/:id/cards/bulk` |
 | My cards | `GET /cards/mine` |
-| Admin dashboard | `GET /admin/stats`, `GET /admin/users`, `GET /admin/workspaces`, block and unblock |
+| Admin dashboard | `GET /admin/stats`, admin users CRUD, admin workspaces CRUD, block and unblock |
 
 ### Query keys and what to refresh (frontend notes)
 

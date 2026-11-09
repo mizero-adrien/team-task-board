@@ -5,13 +5,21 @@ type Props = {
   label: string;
   error?: string;
   hint?: string;
+  labelClassName?: string;
   children: ReactNode;
 };
 
-function FormField({ id, label, error, hint, children }: Props) {
+function FormField({
+  id,
+  label,
+  error,
+  hint,
+  labelClassName = "mb-1 block text-xs font-medium text-slate-600",
+  children,
+}: Props) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1 block text-xs font-medium text-slate-600">
+      <label htmlFor={id} className={labelClassName}>
         {label}
       </label>
       {children}
@@ -20,7 +28,11 @@ function FormField({ id, label, error, hint, children }: Props) {
           {error}
         </p>
       ) : (
-        hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>
+        hint && (
+          <p id={`${id}-hint`} className="mt-1 text-xs text-slate-500">
+            {hint}
+          </p>
+        )
       )}
     </div>
   );
